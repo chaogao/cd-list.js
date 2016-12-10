@@ -43,7 +43,7 @@ export default class HTML5History extends History {
 
   _listenPop () {
     window.addEventListener('popstate', e => {
-      this.cb();
+      this.cb(this.getState());
     })
   }
 

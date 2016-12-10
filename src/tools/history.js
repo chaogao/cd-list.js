@@ -7,7 +7,7 @@ function normalizeBase (base) {
     base = baseEl ? baseEl.getAttribute('href') : '/'
   }
 
-  if (base.charAt(0) !== '/') {
+  if (base[0] !== '/') {
     base = '/' + base
   }
 
@@ -30,7 +30,7 @@ export default class History {
 
   constructor (base = '/', cb) {
     this.base = normalizeBase(base)
-    this.listend(cb);
+    this.listen(cb);
   }
 
   listen (cb = ()=>{}) {

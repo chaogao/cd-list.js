@@ -4,15 +4,101 @@
     </head>
     <body>
         <div id="cdlist-demo"></div>
+
+        <style>
+          .mod-page-item-active {
+            color: red;
+          }
+        </style>
         <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.js" charset="utf-8"></script>
         <script type="text/javascript" src="/lib/cdlist.js" charset="utf-8"></script>
 
         <script>
-          var cdList = new CdList({}, '#cdlist-demo');
+          var sort = window.sort = new CdList.addons.Sort({
+            datas: [
+              {
+                key: 'default',
+                name: 'defaul'
+              },
+              {
+                key: 'time',
+                name: 'time sorting',
+                types: [
+                  CdList.addons.Sort.SORT_MAP.ASC,
+                  CdList.addons.Sort.SORT_MAP.DESC
+                ]
+              }
+            ]
+          });
+
+          var search = window.search = new CdList.addons.Search({
+            btnText: '查询',
+            historyEnable: 1
+          });
+
+          search.on('error', function () {
+            alert(1);
+          });
+
+          var pg = window.pg = new CdList.addons.Pagination({
+            historyEnable: 1,
+            getSetting: function (json) {
+              if (json) {
+                return {
+                  total: 5
+                }
+              }
+            }
+          });
+
+          var filter = window.filter = new CdList.addons.Filter({
+            historyEnable: 1,
+            filters: [
+              {
+                name: 'usertype',
+                datas: [
+                  { name: '不限', value: 0 },
+                  { name: '僵尸用户', value: '1' },
+                  { name: '活跃用户', value: '2' }
+                ]
+              },
+              {
+                name: 'buytype',
+                datas: [
+                  { name: '不限', value: 0 },
+                  { name: '待宰用户', value: '1' },
+                  { name: '黄金用户', value: '2' }
+                ]
+              }
+            ]
+          });
+
+          var cdList = window.cdlist = new CdList({
+            getUrl: function (data) {
+              var param = {};
+
+              console.log(data);
+
+              return '/ajax.json'
+            },
+
+            rows: function (item) {
+              return '<li>hi:' + item.name + '</li>'
+            },
+
+            getRowsData: function (json) {
+              return json.list
+            },
+
+            addons: [search, sort, filter, pg]
+          }, '#cdlist-demo');
 
           cdList.on('created', function () {
             alert(1);
           });
+
+          cdList.getList();
+
         </script>
     </body>
 </html>

@@ -12,7 +12,7 @@ function returnTrue () {
 
 function Event (name, data) {
   this.type = this.name = name;
-  data && $.extend(this, data);
+  data && Object.assign(this, data);
 };
 
 Event.prototype = {
@@ -75,7 +75,7 @@ export default class EventMixin {
       delete handlers[id][handler.i];
     });
   }
-  
+
   /**
    * 触发事件
    */
