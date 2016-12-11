@@ -91,7 +91,7 @@ export default class Pagination {
 
       // 删除 historyKey
       if (self.option.historyKey && !preventDisptach) {
-        self.root.removeHistory(self.option.historyKey, true);
+        self.root.removeHistory(self.option.historyKey);
       }
     });
   }

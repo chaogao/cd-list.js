@@ -4,7 +4,10 @@ import $ from 'jquery';
 var TPL_SORT = '<div class="cdlist-sort-container">' +
   '<ul>' +
     '<% for (var i = 0; i < datas.length; i++) { %>' +
-      '<li class="cdlist-sort-item" data-sort-key="<%= datas[i].key %>">' +
+      '<li class="cdlist-sort-item <% if (activeIndex == i) { %>cdlist-sort-item-active<% } %> ' +
+        '<% if (activeIndex == i && datas[activeIndex].types) { %> cdlist-sort-type-<%=datas[activeIndex].types[datas[activeIndex].activeIndex]%> <% } %>" ' +
+        '<% if (activeIndex == i && datas[activeIndex].types) { %>data-sort-type="<%=datas[activeIndex].types[datas[activeIndex].activeIndex]%>" <% } %>" ' +
+        'data-sort-key="<%= datas[i].key %>">' +
         '<span><%= datas[i].name %></span>' +
       '</li>' +
     '<% } %>' +
@@ -51,9 +54,9 @@ class Sort {
     return this.option.container ? $(this.option.container) : this.root.$topPluginContainer;
   }
 
-  _triggerResetEvent (preventSet) {
+  _triggerResetEvent (preventHistory) {
     this.option.resetList.forEach((addonName) => {
-      this.root.trigger(addonName + '.reset', [preventSet])
+      this.root.trigger(addonName + '.reset', [preventHistory])
     });
   }
 
@@ -61,6 +64,8 @@ class Sort {
     var self = this;
     var $container = self._getContainer();
     $container.append($(self._getHTML()));
+
+    this.$activeItems = $container.find('.cdlist-sort-item-active');
 
     this._initEvent();
   }
@@ -81,15 +86,21 @@ class Sort {
     var $item = this._getContainer().find('.cdlist-sort-item[data-sort-key=' + key + ']');
     var filterData = this._findDataItem(key);
 
-    if (!$item.length || !filterData) { return; }
+    if (!$item.length || !filterData) {
+      return;
+    }
 
     // 如果当前改变的 sort item 跟之前的不一致
     // 则重置现有的 item
     if (this.$activeItems && (this.$activeItems.get(0) != $item.get(0))) {
       this._resetItem(this.$activeItems);
+      this.$activeItems = $item.addClass('cdlist-sort-item-active');
+
+      if (!preventHistory) {
+        this.root.setHistory(this.option.historyKey, key);
+      }
     }
 
-    this.$activeItems = $item.addClass('cdlist-sort-item-active');
 
     // type 存在且在 filterData 中有
     if (type && filterData.types && filterData.types.indexOf(type) > -1) {
@@ -97,11 +108,27 @@ class Sort {
       var currentType = $item.data('sort-type');
       currentType && $item.removeClass('cdlist-sort-type-' + currentType);
 
-      // 加入现在的 type
-      $item.addClass('cdlist-sort-type-' + type).data('sort-type', type);
+      // 不相等才进行设置
+      if (currentType != type) {
+        // 加入现在的 type
+        $item.addClass('cdlist-sort-type-' + type).data('sort-type', type);
+
+        if (!preventHistory) {
+          if (type && filterData.types && filterData.types.indexOf(type) > -1) {
+            this.root.setHistory(this.option.historyTypeKey, type);
+          } else {
+            this.root.removeHistory(this.option.historyTypeKey);
+          }
+        }
+      }
+    } else {
+      if (!preventHistory) {
+        this.root.removeHistory(this.option.historyTypeKey);
+      }
     }
 
-    return this._triggerChange();
+
+    return this._triggerChange(preventHistory);
   }
 
   /**
@@ -143,8 +170,8 @@ class Sort {
   /**
    * trigger sort change event
    */
-  _triggerChange () {
-    this._triggerResetEvent();
+  _triggerChange (preventHistory) {
+    this._triggerResetEvent(preventHistory);
     this.root.trigger('reflow');
   }
 
@@ -160,13 +187,70 @@ class Sort {
   }
 
   _getHTML () {
-    var datas = this.option.datas;
+    this._dealSortData();
 
-    return template(TPL_SORT, {datas: datas});
+    return template(TPL_SORT, {
+      datas: this.option.datas,
+      activeIndex: this.option.activeIndex
+    });
+  }
+
+  _dealSortData () {
+    var option = this.option;
+
+    if (option.activeIndex !== undefined) {
+      option.activeIndex = option.activeIndex || 0;
+      var itemData = option.datas[option.activeIndex];
+      itemData.activeIndex = itemData.activeIndex || 0;
+      return;
+    }
+
+    // 设置默认的 active 状态
+    if (option.historyEnable) {
+      var key = this.root.getHistoryValue(option.historyKey);
+      var typeKey = this.root.getHistoryValue(option.historyTypeKey);
+      var item = this._findDataItem(key);
+      var activeIndex,
+        activeTypeIndex;
+
+      if (item) {
+        this.option.activeIndex = activeIndex = this.option.datas.indexOf(item);
+      } else {
+        this.option.activeIndex = activeIndex = 0;
+        item = option.datas[activeIndex];
+      }
+
+      if (typeKey && item.types) {
+        item.types.forEach(function (type, index) {
+          if (type == typeKey) {
+            item.activeIndex = index;
+          }
+        });
+      } else {
+        item.activeIndex = 0;
+      }
+    }
   }
 
   setRoot (root) {
     this.root = root;
+
+    // 如果可以改变 hash
+    if (this.option.historyEnable) {
+      this.root.on('hashchange', (e, hashData) => {
+        var key = this.root.getHistoryValue(this.option.historyKey)
+          || this.option.datas[this.option.activeIndex].key;
+
+        var item = this._findDataItem(key);
+        var type = this.root.getHistoryValue(this.option.historyTypeKey);
+
+        if (!type && item.types) {
+          type = item.types[item.activeIndex];
+        }
+
+        this.activeSort(key, type, true);
+      });
+    }
   }
 
   reset () {
