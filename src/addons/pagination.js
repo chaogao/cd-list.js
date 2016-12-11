@@ -2,7 +2,7 @@ var $ = require('jquery');
 var template = require('../template');
 var PaginationTool = require('../tools/pagination.js');
 
-var TPL_PA = '<div class="cdtable-pagination-container"></div>';
+var TPL_PA = '<div class="cdlist-pagination-container"></div>';
 
 let _addonName = 'pagination';
 
@@ -55,7 +55,7 @@ export default class Pagination {
       $container = self._getContainer();
 
     if (!self._pageInstance && setting) {
-      self._pageInstance = new PaginationTool($container.find('.cdtable-pagination-container'), {
+      self._pageInstance = new PaginationTool($container.find('.cdlist-pagination-container'), {
         pageCount: setting.total,
         currentPage: self.savedIndex || self._initPage || 0,
         allwaysShow: true,

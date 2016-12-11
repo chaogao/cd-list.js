@@ -4,16 +4,16 @@ import $ from 'jquery'
 import mixin from '../tools/mixin.js';
 import EventMixin from '../tools/event.js';
 
-let TPL_SEARCH = '<div class="cdtable-search-container">' +
-  '<input class="cdtable-search-input" value="<%= val %>" placeholder="<%= placeholder %>" />' +
-  '<a href="javascript:void(0);" class="cdtable-search-action"><%= btnText %></a>' +
+let TPL_SEARCH = '<div class="cdlist-search-container">' +
+  '<input class="cdlist-search-input" value="<%= val %>" placeholder="<%= placeholder %>" />' +
+  '<a href="javascript:void(0);" class="cdlist-search-action"><%= btnText %></a>' +
 '</div>';
 
 let _option = {
   btnText: '搜索',
   val: '',
   placeholder: '',
-  resetList: ['pagination', 'filter']
+  resetList: ['pagination', 'filter', 'sort']
 }
 
 let _addonName = 'search'
@@ -54,7 +54,7 @@ export default class Search extends mixin(EventMixin) {
     var $container = self._getContainer();
     $container.append($(self._getHTML()));
 
-    this.$input = $container.find('.cdtable-search-input');
+    this.$input = $container.find('.cdlist-search-input');
 
     this._initEvent();
   }
@@ -66,7 +66,7 @@ export default class Search extends mixin(EventMixin) {
     var self = this;
 
     // 检索点击
-    self._getContainer().delegate('.cdtable-search-action', 'click', function (e, preventSet) {
+    self._getContainer().delegate('.cdlist-search-action', 'click', function (e, preventSet) {
       if (self._validateValue()) {
         self._triggerResetEvent();
         self.root.trigger('reflow');
@@ -77,7 +77,7 @@ export default class Search extends mixin(EventMixin) {
       }
     });
 
-    self._getContainer().delegate('.cdtable-search-input', 'keydown', function (e, preventSet) {
+    self._getContainer().delegate('.cdlist-search-input', 'keydown', function (e, preventSet) {
       if (e.keyCode == 13) {
         if (self._validateValue()) {
           self._triggerResetEvent();

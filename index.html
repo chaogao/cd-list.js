@@ -9,6 +9,23 @@
           .mod-page-item-active {
             color: red;
           }
+          .cdlist-sort-item-active {
+            color: red;
+          }
+
+          .cdlist-sort-item-active {
+            color: red;
+          }
+
+          .cdlist-sort-type-desc:after {
+            content: " down";
+            color: blue;
+          }
+
+          .cdlist-sort-type-asc:after {
+            content: " up";
+            color: blue;
+          }
         </style>
         <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.js" charset="utf-8"></script>
         <script type="text/javascript" src="/lib/cdlist.js" charset="utf-8"></script>
@@ -17,12 +34,20 @@
           var sort = window.sort = new CdList.addons.Sort({
             datas: [
               {
-                key: 'default',
-                name: 'defaul'
+                key: 'defautl',
+                name: '默认'
+              },
+              {
+                key: 'price',
+                name: '价格排序',
+                types: [
+                  CdList.addons.Sort.SORT_MAP.ASC,
+                  CdList.addons.Sort.SORT_MAP.DESC
+                ]
               },
               {
                 key: 'time',
-                name: 'time sorting',
+                name: '时间排序',
                 types: [
                   CdList.addons.Sort.SORT_MAP.ASC,
                   CdList.addons.Sort.SORT_MAP.DESC

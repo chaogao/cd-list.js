@@ -14,10 +14,10 @@ let tools;
 let addons;
 let TPL_CD_LAYOUT  = [
   '<div data-cd-container="plugin-top"></div>',
-  '<div class="cdtable-table-container" data-cd-container="table"></div>',
+  '<div class="cdlist-list-container" data-cd-container="list"></div>',
   '<div data-cd-container="plugin-bottom"></div>'
 ];
-let TPL_CD_EMPTY = '<div class="cdtable-table-empty">没有数据，重新查询</div>';
+let TPL_CD_EMPTY = '<div class="cdlist-list-empty">没有数据，重新查询</div>';
 
 const STAT_LOADING = 'STATE_LOADING';
 const STAT_LOADED = 'STAT_LOADED';
@@ -160,7 +160,7 @@ class CdList extends mixin(EventMixin) {
     this.$el.html(TPL_CD_LAYOUT);
     this.$topPluginContainer = this.$el.find('[data-cd-container=plugin-top]');
     this.$bottomPluginContainer = this.$el.find('[data-cd-container=plugin-bottom]');
-    this.$tableContainer = this.$el.find('[data-cd-container=table]');
+    this.$listContainer = this.$el.find('[data-cd-container=list]');
 
     for (var key in this.addons) {
       this.addons[key].initView();
@@ -242,7 +242,7 @@ class CdList extends mixin(EventMixin) {
   }
 
   _renderEmpty () {
-    this.$tableContainer.html(this.option.empty ? this.option.empty() : TPL_CD_EMPTY);
+    this.$listContainer.html(this.option.empty ? this.option.empty() : TPL_CD_EMPTY);
   }
 
   _getAjaxData (url) {
@@ -294,7 +294,7 @@ class CdList extends mixin(EventMixin) {
       '</ul>'].join("");
     }
 
-    self.$tableContainer.html(html);
+    self.$listContainer.html(html);
   }
 }
 

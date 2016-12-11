@@ -1,11 +1,11 @@
 var $ = require('jquery');
 var template = require('../template');
 
-var TPL_FILTER = '<div class="cdtable-filter-container">' +
+var TPL_FILTER = '<div class="cdlist-filter-container">' +
   '<ul>' +
     '<% for (var i = 0; i < filters.length; i++) { %>' +
       '<li>' +
-        '<span class="cdtable-filter-select-name"><%= filters[i].label %></span>' +
+        '<span class="cdlist-filter-select-name"><%= filters[i].label %></span>' +
         '<select name=\'<%= filters[i].name %>\'>' +
           '<% for (var j = 0; j < filters[i].datas.length; j++) { %>' +
             '<option <% if (j == filters[i].activeIndex) { %>selected="selected"<% } %>  data-idx="<%= j %>" value=\'<%= filters[i].datas[j].value %>\'><%= filters[i].datas[j].name %></option>' +
@@ -16,16 +16,16 @@ var TPL_FILTER = '<div class="cdtable-filter-container">' +
   '</ul>' +
 '</div>';
 
-var TPL_FILTER_LINE = '<div class="cdtable-filter-container cdtable-filter-container-line">' +
+var TPL_FILTER_LINE = '<div class="cdlist-filter-container cdlist-filter-container-line">' +
     '<ul>' +
       '<% for (var i = 0; i < filters.length; i++) { %>' +
         '<li <% if (filters[i].className) { %>class="<%= filters[i].className %>" <% } %> >' +
           '<% if (filters[i].label) { %>' +
-            '<div class="cdtable-filter-select-name"><%= filters[i].label %></div>' +
+            '<div class="cdlist-filter-select-name"><%= filters[i].label %></div>' +
           '<% } %>' +
-          '<ul class="cdtable-filter-raw-list">' +
+          '<ul class="cdlist-filter-raw-list">' +
             '<% for (var j = 0; j < filters[i].datas.length; j++) { %>' +
-              '<li data-name="<%= filters[i].name %>" class="cdtable-filter-raw-item <% if (j == filters[i].activeIndex) { %>cdtable-filter-raw-item-active<% } %>" data-value="<%= filters[i].datas[j].value %>">' +
+              '<li data-name="<%= filters[i].name %>" class="cdlist-filter-raw-item <% if (j == filters[i].activeIndex) { %>cdlist-filter-raw-item-active<% } %>" data-value="<%= filters[i].datas[j].value %>">' +
                 '<a href="javascript:void(0)"><%= filters[i].datas[j].name %></a>' +
               '</li>' +
             '<% } %>' +
@@ -99,9 +99,9 @@ export default class Filter {
 
     // 发生改变立即进行重新请求
     if (self.option.line) {
-      self._getContainer().delegate('.cdtable-filter-raw-item', 'click', function (e, preventSet) {
-        $(this).addClass('cdtable-filter-raw-item-active')
-          .siblings().removeClass('cdtable-filter-raw-item-active');
+      self._getContainer().delegate('.cdlist-filter-raw-item', 'click', function (e, preventSet) {
+        $(this).addClass('cdlist-filter-raw-item-active')
+          .siblings().removeClass('cdlist-filter-raw-item-active');
 
         self._triggerResetEvent(preventSet);
         self.root.trigger('reflow');
@@ -192,10 +192,10 @@ export default class Filter {
     }
 
     if (self.option.line) {
-      var $li = self._getContainer().find('.cdtable-filter-raw-item[data-name="' + filter.name + '"][data-value="' + value + '"]');
+      var $li = self._getContainer().find('.cdlist-filter-raw-item[data-name="' + filter.name + '"][data-value="' + value + '"]');
 
       // 已经选中了就不触发了
-      if ($li.hasClass('cdtable-filter-raw-item-active')) {
+      if ($li.hasClass('cdlist-filter-raw-item-active')) {
         return;
       }
 
@@ -262,7 +262,7 @@ export default class Filter {
             if (self.option.line) {
               var value = hashData[historyKey] || filter.datas[filter.activeIndex].value;
 
-              var $li = self._getContainer().find('.cdtable-filter-raw-item[data-name="' + key + '"][data-value="' + value + '"]');
+              var $li = self._getContainer().find('.cdlist-filter-raw-item[data-name="' + key + '"][data-value="' + value + '"]');
 
               if ($li.length) {
                 $li.trigger('click', [true]);
@@ -301,7 +301,7 @@ export default class Filter {
     var filters = self.option.filters;
 
     if (self.option.line) {
-      this._getContainer().find('.cdtable-filter-raw-item-active').each(function () {
+      this._getContainer().find('.cdlist-filter-raw-item-active').each(function () {
         data[$(this).attr('data-name')] = $(this).attr('data-value');
       });
     } else {
