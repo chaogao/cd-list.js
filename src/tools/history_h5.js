@@ -16,14 +16,19 @@ function getLocation (base) {
  */
 function pushState (url, replace = false) {
   const history = window.history
-  try {
-    if (replace) {
-      history.replaceState('', '', url)
-    } else {
-      history.pushState('', '', url)
+
+  if (this.canHistory) {
+    try {
+      if (replace) {
+        history.replaceState('', '', url)
+      } else {
+        history.pushState('', '', url)
+      }
+    } catch (e) {
+      window.location[replace ? 'assign' : 'replace'](url)
     }
-  } catch (e) {
-    window.location[replace ? 'assign' : 'replace'](url)
+  } else {
+    window.location.href = url;
   }
 }
 
@@ -35,8 +40,8 @@ function cleanPath (path) {
 }
 
 export default class HTML5History extends History {
-  constructor (base, cb) {
-    super(base, cb);
+  constructor (base, option) {
+    super(base, option);
 
     this._listenPop();
   }
@@ -60,10 +65,10 @@ export default class HTML5History extends History {
   }
 
   push (url) {
-    pushState(cleanPath(this.base + url));
+    pushState.call(this, cleanPath(this.base + url));
   }
 
   replace (url) {
-    pushState(cleanPath(this.base + url), true);
+    pushState.call(this, cleanPath(this.base + url), true);
   }
 }

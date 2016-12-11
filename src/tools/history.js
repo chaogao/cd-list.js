@@ -28,9 +28,16 @@ export default class History {
     throw 'need implemented'
   }
 
-  constructor (base = '/', cb) {
+  constructor (base = '/', option) {
+    option = option || {};
+
     this.base = normalizeBase(base)
-    this.listen(cb);
+
+    if (option.disableHistory) {
+      this.canHistory = false;
+    } else {
+      this.canHistory = !!window.history.pushState
+    }
   }
 
   listen (cb = ()=>{}) {

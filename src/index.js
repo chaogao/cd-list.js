@@ -26,11 +26,15 @@ const DEFAULT_HISTORY_CONF = {
   base: window.location.pathname
 };
 
+let _option = {
+  disableHistory: false
+}
+
 class CdList extends mixin(EventMixin) {
   constructor(option, el) {
     super();
 
-    this.option = option;
+    this.option = Object.assign({}, _option, option);
     this.$el = $(el).addClass('cdlist-root-container');
 
     this._bindHistory();
@@ -123,7 +127,9 @@ class CdList extends mixin(EventMixin) {
 
     var option = Object.assign({}, DEFAULT_HISTORY_CONF, self.option.historyOption);
 
-    this.history = new HTML5History(option.base);
+    this.history = new HTML5History(option.base, {
+      disableHistory: this.option.disableHistory
+    });
 
     // get init history state
     var state = this.history.getState();
