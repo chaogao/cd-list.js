@@ -1,4 +1,4 @@
-var $ = require('jquery');
+import $ from 'jquery';
 var template = require('../template');
 
 var TPL_FILTER = '<div class="cdlist-filter-container">' +
