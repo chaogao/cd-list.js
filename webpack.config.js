@@ -29,7 +29,7 @@ function isExternal(module) {
 
 var entry = {};
 
-entry[outputFile] = __dirname + '/src/index.js';
+entry[outputFile] = ['babel-polyfill', __dirname + '/src/index.js'];
 
 var config = {
   entry: entry,
