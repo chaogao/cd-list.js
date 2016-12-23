@@ -2,15 +2,14 @@ export default function mix(...mixins) {
   class Mix {}
 
   for (let mixin of mixins) {
-    copyProperties(Mix, mixin);
-    copyProperties(Mix.prototype, mixin.prototype);
+    copyProperties(Mix.prototype, mixin);
   }
 
   return Mix;
 }
 
 function copyProperties(target, source) {
-  for (let key of Reflect.ownKeys(source)) {
+  for (let key in source) {
     if ( key !== "constructor"
       && key !== "prototype"
       && key !== "name"

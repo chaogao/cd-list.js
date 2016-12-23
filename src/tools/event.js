@@ -47,7 +47,7 @@ function findHandlers(context, name, fn) {
 
 export { Event }
 
-export default class EventMixin {
+export default {
 
   on (name, fn, context) {
     var id = zid(this),
@@ -63,7 +63,7 @@ export default class EventMixin {
     });
 
     return this;
-  }
+  },
 
   /**
    * 移除事件
@@ -74,7 +74,7 @@ export default class EventMixin {
     findHandlers(this, name, fn).forEach(function (handler) {
       delete handlers[id][handler.i];
     });
-  }
+  },
 
   /**
    * 触发事件

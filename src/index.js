@@ -104,7 +104,6 @@ class CdList extends mixin(EventMixin) {
     var historyOpt = self.historyOpt;
     var param = $.param(historyOpt);
 
-    console.log('push:' + param);
     self.preventDisptach = preventDisptach;
     self.history.push('?' + param);
   }
@@ -138,8 +137,6 @@ class CdList extends mixin(EventMixin) {
 
     this.history.listen((state) => {
       var historyOpt = this.historyOpt = tools.url.getParamMap(decodeURIComponent(state.hash));
-
-      console.log(historyOpt);
 
       if (!self.preventDisptach) {
         self._disptachHistory(historyOpt);
@@ -225,7 +222,7 @@ class CdList extends mixin(EventMixin) {
         addon.setRoot(self);
         self.addons[addon.getName()] = addon
       } else {
-        console.warn('your addon ' + addon.getName() + ' is invaild');
+        // console && console.warn('your addon ' + addon.getName() + ' is invaild');
       }
     });
 

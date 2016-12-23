@@ -29,7 +29,7 @@ function isExternal(module) {
 
 var entry = {};
 
-entry[outputFile] = ['babel-polyfill', __dirname + '/src/index.js'];
+entry[outputFile] = [__dirname + '/src/index.js'];
 
 var config = {
   entry: entry,
@@ -49,7 +49,7 @@ var config = {
     loaders: [
       {
         test: /(\.jsx|\.js)$/,
-        loader: 'babel',
+        loader: 'es3ify-loader!babel',
         exclude: /(node_modules|bower_components)/
       }
     ]
