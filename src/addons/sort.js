@@ -78,7 +78,7 @@ class Sort {
     });
 
     self.root.on('sort.reset', function (e, preventDisptach) {
-      self.reset();
+      self.reset(preventDisptach);
     });
   }
 
@@ -253,10 +253,10 @@ class Sort {
     }
   }
 
-  reset () {
+  reset (preventDisptach) {
     var defaultSort = this.option.datas[0];
 
-    this.activeSort(defaultSort.key, defaultSort.types && defaultSort.types[0]);
+    this.activeSort(defaultSort.key, defaultSort.types && defaultSort.types[0], preventDisptach);
   }
 
   getAddonData () {

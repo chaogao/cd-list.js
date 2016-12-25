@@ -67,12 +67,12 @@ export default class Pagination {
       self.savedIndex = undefined;
       self._initPage = undefined;
 
-      $(self._pageInstance).on('page', function (e) {
+      self._pageInstance.on('page', function (e, currentPage) {
         self.root.trigger('reflow');
 
         // 设置 filter 的 hash
         if (self.option.historyEnable && !self.preventSet) {
-          self.root.setHistory(self.option.historyKey, e.page, true);
+          self.root.setHistory(self.option.historyKey, currentPage, true);
         }
 
         self.preventSet = undefined;

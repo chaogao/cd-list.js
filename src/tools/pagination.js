@@ -19,6 +19,9 @@ const PAGE_TPL = '' +
    '<% } %>' +
  '</div>';
 
+import EventMixin from './event.js';
+import mixin from './mixin.js';
+
 /**
  * 分页控件，无需写 html ，提供一个 div 节点自动生成所有的分页所需标签
  * @alias module:jsmod/ui/pagination
@@ -38,8 +41,10 @@ const PAGE_TPL = '' +
  * // 创建实例
  * new Pagination("#page-container", {pageCount: 20});
  */
-export default class Pagination {
+export default class Pagination extends mixin(EventMixin) {
   constructor (element, option) {
+    super();
+
     var self = this;
 
     self.element = $(element);
@@ -84,7 +89,6 @@ export default class Pagination {
 
     html = self.getHTML(self.getRenderDatas(page));
     self.element.html(html);
-    e = $.Event("page", {page: self.currentPage});
 
     /**
      * 设置page触发的事件，重复设置相同page会触发多次事件
@@ -93,7 +97,7 @@ export default class Pagination {
      * @property {int} page 当前设定的page值
      */
     if (!preventDisptach) {
-      $(self).trigger(e, [{page: self.currentPage}]);
+      self.trigger('page', [self.currentPage]);
     }
   }
 

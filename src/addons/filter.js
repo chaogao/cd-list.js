@@ -93,8 +93,8 @@ export default class Filter {
     var self = this;
 
     // 监听使自己 reset 的事件
-    self.root.on('filter.reset', () => {
-      self.reset();
+    self.root.on('filter.reset', (e, preventDisptach) => {
+      self.reset(preventDisptach);
     });
 
     // 发生改变立即进行重新请求
@@ -286,9 +286,9 @@ export default class Filter {
   /**
    * 重置 filter 所有的 select
    */
-  reset () {
+  reset (preventDisptach) {
     this.option.filters.forEach((filter) => {
-      this.setActive(filter.name, filter.datas[filter.resetIndex || 0].value);
+      this.setActive(filter.name, filter.datas[filter.resetIndex || 0].value, preventDisptach);
     });
   }
 

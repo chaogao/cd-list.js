@@ -55,6 +55,7 @@ export default class Search extends mixin(EventMixin) {
     $container.append($(self._getHTML()));
 
     this.$input = $container.find('.cdlist-search-input');
+    this.$btn = $container.find('.cdlist-search-action');
 
     this._initEvent();
   }
@@ -68,7 +69,7 @@ export default class Search extends mixin(EventMixin) {
     // 检索点击
     self._getContainer().delegate('.cdlist-search-action', 'click', function (e, preventSet) {
       if (self._validateValue()) {
-        self._triggerResetEvent();
+        self._triggerResetEvent(preventSet);
         self.root.trigger('reflow');
 
         if (self.option.historyEnable && !preventSet) {
@@ -80,7 +81,7 @@ export default class Search extends mixin(EventMixin) {
     self._getContainer().delegate('.cdlist-search-input', 'keydown', function (e, preventSet) {
       if (e.keyCode == 13) {
         if (self._validateValue()) {
-          self._triggerResetEvent();
+          self._triggerResetEvent(preventSet);
           self.root.trigger('reflow');
 
           if (self.option.historyEnable && !preventSet) {
@@ -156,8 +157,8 @@ export default class Search extends mixin(EventMixin) {
     if (value == oriValue) {
       return;
     }
-
-    this.$input.val(value).trigger('click', [preventHistory]);
+    this.$input.val(value);
+    this.$btn.trigger('click', [preventHistory]);
   }
 
   /**
