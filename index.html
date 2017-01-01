@@ -27,6 +27,8 @@
           </ul>
         </div>
 
+        <div id="mysearh-wrap"></div>
+        <div id="filter-wrap"></div>
         <div id="cdlist-demo"></div>
 
         <style>
@@ -87,42 +89,67 @@
           });
 
           var search = window.search = new CdList.addons.Search({
-            btnText: '查询',
-            historyEnable: 1
+            btnText: '点我吧！',
+
+            placeholder: '需要输入1开头的数字',
+
+            val: '133',
+
+            regex: /^1\d+/,
+
+            historyEnable: true,
+
+            historyKey: 'mysearch',
+
+            container: '#mysearh-wrap'
           });
 
-          search.on('error', function () {
-            alert(1);
+          search.on('error', function (e, value) {
+            alert(value + '你输入错了');
           });
 
           var pg = window.pg = new CdList.addons.Pagination({
-            historyEnable: 1,
+            pagination: {
+              allwaysShow: false,
+
+              maxShowPage: 5,
+
+              textLabel: ['头', '上', '下', '尾']
+            },
+
+            historyEnable: true,
+
+
             getSetting: function (json) {
-              if (json) {
-                return {
-                  total: 3
-                }
+              return {
+                total: 10
               }
             }
           });
 
           var filter = window.filter = new CdList.addons.Filter({
             historyEnable: 1,
+
+            line: 1,
+
+            container: '#filter-wrap',
+
             filters: [
               {
+                label: '用户属性',
+
                 name: 'usertype',
+
+                activeIndex: 1,
+
+                className: 'item-usertype',
+
+                historyKey: 'my-usertype',
+
                 datas: [
                   { name: '不限', value: 0 },
                   { name: '僵尸用户', value: '1' },
                   { name: '活跃用户', value: '2' }
-                ]
-              },
-              {
-                name: 'buytype',
-                datas: [
-                  { name: '不限', value: 0 },
-                  { name: '待宰用户', value: '1' },
-                  { name: '黄金用户', value: '2' }
                 ]
               }
             ]

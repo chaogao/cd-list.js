@@ -5,8 +5,10 @@ var TPL_SORT = '<div class="cdlist-sort-container">' +
   '<ul>' +
     '<% for (var i = 0; i < datas.length; i++) { %>' +
       '<li class="cdlist-sort-item <% if (activeIndex == i) { %>cdlist-sort-item-active<% } %> ' +
-        '<% if (activeIndex == i && datas[activeIndex].types) { %> cdlist-sort-type-<%=datas[activeIndex].types[datas[activeIndex].activeIndex]%> <% } %>" ' +
-        '<% if (activeIndex == i && datas[activeIndex].types) { %>data-sort-type="<%=datas[activeIndex].types[datas[activeIndex].activeIndex]%>" <% } %>" ' +
+        '<% if (activeIndex == i && datas[activeIndex].types) { %>' +
+          'cdlist-sort-type-<%=datas[activeIndex].types[datas[activeIndex].activeIndex]%><% } %>"' +
+        '<% if (activeIndex == i && datas[activeIndex].types) { %>' +
+          'data-sort-type="<%=datas[activeIndex].types[datas[activeIndex].activeIndex]%>"<% } %>' +
         'data-sort-key="<%= datas[i].key %>">' +
         '<span><%= datas[i].name %></span>' +
       '</li>' +

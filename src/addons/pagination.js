@@ -10,8 +10,7 @@ let _option = {
   // 分页插件的配置
   pagination: {
     allwaysShow: true,
-    maxShowPage: 3,
-    preventInitEvent: true
+    maxShowPage: 3
   }
 }
 
@@ -70,6 +69,7 @@ export default class Pagination {
       }, self.option.pagination, {
         pageCount: setting.total,
         currentPage: self.savedIndex || self._initPage || 0,
+        preventInitEvent: true
       });
 
       self._pageInstance = new PaginationTool($container.find('.cdlist-pagination-container'), option);
