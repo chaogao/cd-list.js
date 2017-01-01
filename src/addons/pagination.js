@@ -6,6 +6,16 @@ var TPL_PA = '<div class="cdlist-pagination-container"></div>';
 
 let _addonName = 'pagination';
 
+let _option = {
+  // 分页插件的配置
+  pagination: {
+    allwaysShow: true,
+    maxShowPage: 3,
+    preventInitEvent: true
+  }
+}
+
+
 export default class Pagination {
   constructor (option) {
     // 设置默认的 historyKey
@@ -13,7 +23,7 @@ export default class Pagination {
       option.historyKey = option.historyKey || 'page';
     }
 
-    this.option = option;
+    this.option = Object.assign({}, _option, option);
   }
 
   getName () {
@@ -54,14 +64,15 @@ export default class Pagination {
       setting = self.option.getSetting(json),
       $container = self._getContainer();
 
-    if (!self._pageInstance && setting) {
-      self._pageInstance = new PaginationTool($container.find('.cdlist-pagination-container'), {
+    if (!self._pageInstance && setting && setting.total > 0) {
+      let option = Object.assign({
+        textLabel: self.root.lang.ADDON.PAGINATION
+      }, self.option.pagination, {
         pageCount: setting.total,
         currentPage: self.savedIndex || self._initPage || 0,
-        allwaysShow: true,
-        maxShowPage: 3,
-        preventInitEvent: true
       });
+
+      self._pageInstance = new PaginationTool($container.find('.cdlist-pagination-container'), option);
 
       // initPage 只用一次
       self.savedIndex = undefined;
@@ -72,7 +83,7 @@ export default class Pagination {
 
         // 设置 filter 的 hash
         if (self.option.historyEnable && !self.preventSet) {
-          self.root.setHistory(self.option.historyKey, currentPage, true);
+          self.root.setHistory(self.option.historyKey, currentPage);
         }
 
         self.preventSet = undefined;

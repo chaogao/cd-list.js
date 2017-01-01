@@ -1,5 +1,7 @@
 import $ from 'jquery';
 
+import template from './template.js';
+
 import Filter from './addons/filter.js';
 import Pagination from './addons/pagination.js';
 import Search from './addons/search.js';
@@ -9,6 +11,7 @@ import EventMixin from './tools/event.js';
 import HTML5History from './tools/history_h5.js';
 import mixin from './tools/mixin.js';
 import url from './tools/url';
+import L10 from './l10/index.js';
 
 let tools;
 let addons;
@@ -17,7 +20,7 @@ let TPL_CD_LAYOUT  = [
   '<div class="cdlist-list-container" data-cd-container="list"></div>',
   '<div data-cd-container="plugin-bottom"></div>'
 ];
-let TPL_CD_EMPTY = '<div class="cdlist-list-empty">没有数据，重新查询</div>';
+let TPL_CD_EMPTY = '<div class="cdlist-list-empty"><%= emptyText %></div>';
 
 const STAT_LOADING = 'STATE_LOADING';
 const STAT_LOADED = 'STAT_LOADED';
@@ -27,7 +30,8 @@ const DEFAULT_HISTORY_CONF = {
 };
 
 let _option = {
-  disableHistory: false
+  disableHistory: false,
+  lang: 'zh'
 }
 
 class CdList extends mixin(EventMixin) {
@@ -36,6 +40,7 @@ class CdList extends mixin(EventMixin) {
 
     this.option = Object.assign({}, _option, option);
     this.$el = $(el).addClass('cdlist-root-container');
+    this.lang = L10[this.option.lang] || L10['en'];
 
     this._bindHistory();
     this._initEvent();
@@ -205,7 +210,7 @@ class CdList extends mixin(EventMixin) {
         if (rowData && rowData.length) {
           self._render(rowData, json);
         } else {
-          self._renderEmpty();
+          self._renderEmpty(urlData);
         }
       });
     }
@@ -244,8 +249,11 @@ class CdList extends mixin(EventMixin) {
     return f;
   }
 
-  _renderEmpty () {
-    this.$listContainer.html(this.option.empty ? this.option.empty() : TPL_CD_EMPTY);
+  _renderEmpty (urlData) {
+    this.$listContainer.html(this.option.empty ?
+        this.option.empty(urlData) : template(TPL_CD_EMPTY, {
+          emptyText: this.lang.NO_SEARCH_RESULT
+        }));
   }
 
   _getAjaxData (url) {

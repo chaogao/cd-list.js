@@ -100,7 +100,7 @@
             getSetting: function (json) {
               if (json) {
                 return {
-                  total: 5
+                  total: 3
                 }
               }
             }
@@ -139,12 +139,19 @@
               return '/ajax.json'
             },
 
+            getAjaxData: function (url) {
+              return $.ajax({
+                url: url,
+                dataType: 'json'
+              });
+            },
+
             rows: function (item) {
               return '<li>hi:' + item.name + '</li>'
             },
 
             getRowsData: function (json) {
-              return json.list
+              return json.list;
             },
 
             addons: [search, sort, filter, pg]
