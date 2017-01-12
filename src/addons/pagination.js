@@ -63,7 +63,7 @@ export default class Pagination {
       setting = self.option.getSetting(json),
       $container = self._getContainer();
 
-    if (!self._pageInstance && setting && setting.total > 0) {
+    if (!self._pageInstance && setting && setting.total > 1) {
       let option = Object.assign({
         textLabel: self.root.lang.ADDON.PAGINATION
       }, self.option.pagination, {
@@ -85,6 +85,8 @@ export default class Pagination {
         if (self.option.historyEnable && !self.preventSet) {
           self.root.setHistory(self.option.historyKey, currentPage);
         }
+
+        self.option.onChange && self.option.onChange(currentPage);
 
         self.preventSet = undefined;
       });

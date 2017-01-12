@@ -2,6 +2,7 @@ var webpack = require('webpack');
 var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 var path = require('path');
 var env = require('yargs').argv.mode;
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var libraryName = 'CdList';
 
@@ -28,8 +29,13 @@ function isExternal(module) {
 }
 
 var entry = {};
-
 entry[outputFile] = [__dirname + '/src/index.js'];
+
+
+var cssExtract = new ExtractTextPlugin('[name].css');
+var lessLoader = cssExtract.extract(['css', 'less']);
+
+plugins.push(cssExtract);
 
 var config = {
   entry: entry,
@@ -48,8 +54,18 @@ var config = {
   module: {
     loaders: [
       {
+        test: /\.(gif|jpg|png|woff|svg|eot|ttf|swf)\??.*$/,
+        exclude: /node_modules/,
+        loader: 'url'
+      },
+      {
         test: /(\.jsx|\.js)$/,
         loader: 'es3ify-loader!babel',
+        exclude: /(node_modules|bower_components)/
+      },
+      {
+        test: /(\.less)$/,
+        loader: lessLoader,
         exclude: /(node_modules|bower_components)/
       }
     ]

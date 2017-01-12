@@ -6,12 +6,16 @@ import Filter from './addons/filter.js';
 import Pagination from './addons/pagination.js';
 import Search from './addons/search.js';
 import Sort from './addons/sort.js';
+import Inputs from './addons/inputs.js';
+import DatePicker from './addons/datepicker.js';
 
 import EventMixin from './tools/event.js';
 import HTML5History from './tools/history_h5.js';
 import mixin from './tools/mixin.js';
 import url from './tools/url';
 import L10 from './l10/index.js';
+
+import './style/default.less'
 
 let tools;
 let addons;
@@ -157,7 +161,11 @@ class CdList extends mixin(EventMixin) {
 
   _initEvent () {
     this.on('reflow', () => {
-      this.getList();
+      this._getListTimer && clearTimeout(this._getListTimer);
+
+      this._getListTimer = setTimeout(() => {
+        this.getList();
+      }, 50);
     });
   }
 
@@ -313,7 +321,9 @@ CdList.addons = addons = {
   Filter,
   Pagination,
   Search,
-  Sort
+  Sort,
+  Inputs,
+  DatePicker
 };
 
 CdList.tools = tools = {

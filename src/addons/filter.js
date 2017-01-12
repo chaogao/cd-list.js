@@ -2,9 +2,9 @@ import $ from 'jquery';
 var template = require('../template');
 
 var TPL_FILTER = '<div class="cdlist-filter-container">' +
-  '<ul>' +
+  '<ul class="cdlist-filter-list">' +
     '<% for (var i = 0; i < filters.length; i++) { %>' +
-      '<li>' +
+      '<li class="cdlist-filter-list-item">' +
         '<span class="cdlist-filter-select-name"><%= filters[i].label %></span>' +
         '<select name=\'<%= filters[i].name %>\'>' +
           '<% for (var j = 0; j < filters[i].datas.length; j++) { %>' +
@@ -17,9 +17,10 @@ var TPL_FILTER = '<div class="cdlist-filter-container">' +
 '</div>';
 
 var TPL_FILTER_LINE = '<div class="cdlist-filter-container cdlist-filter-container-line">' +
-    '<ul>' +
+    '<ul class="cdlist-filter-list">' +
       '<% for (var i = 0; i < filters.length; i++) { %>' +
-        '<li <% if (filters[i].className) { %>class="<%= filters[i].className %>" <% } %> >' +
+        '<li <% if (filters[i].className) { %>class="cdlist-filter-list-item <%= filters[i].className %>"' +
+          '<% } else { %> class="cdlist-filter-list-item" <% } %> >' +
           '<% if (filters[i].label) { %>' +
             '<div class="cdlist-filter-select-name"><%= filters[i].label %></div>' +
           '<% } %>' +
@@ -113,6 +114,8 @@ export default class Filter {
 
           self._setHash(key, value, true);
         }
+
+        self.option.onChange && self.option.onChange();
       });
     } else {
       self._getContainer().delegate('select', 'change', function (e, preventSet) {
@@ -126,6 +129,8 @@ export default class Filter {
 
           self._setHash(key, value, true);
         }
+
+        self.option.onChange && self.option.onChange();
       });
     }
   }

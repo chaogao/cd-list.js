@@ -69,24 +69,40 @@ export default class Search extends mixin(EventMixin) {
     // 检索点击
     self._getContainer().delegate('.cdlist-search-action', 'click', function (e, preventSet) {
       if (self._validateValue()) {
-        self._triggerResetEvent(preventSet);
         self.root.trigger('reflow');
 
         if (self.option.historyEnable && !preventSet) {
           self.root.setHistory(self.option.historyKey, self.getAddonData());
         }
+
+        // 未开启 history 模式总是重置，开启时非preventSet时才重置
+        if (self.option.historyEnable && !preventSet) {
+          self._triggerResetEvent(preventSet);
+        } else if (!self.option.historyEnable) {
+          self._triggerResetEvent(preventSet);
+        }
+
+        self.option.onChange && self.option.onChange();
       }
     });
 
     self._getContainer().delegate('.cdlist-search-input', 'keydown', function (e, preventSet) {
       if (e.keyCode == 13) {
         if (self._validateValue()) {
-          self._triggerResetEvent(preventSet);
           self.root.trigger('reflow');
 
           if (self.option.historyEnable && !preventSet) {
             self.root.setHistory(self.option.historyKey, self.getAddonData());
           }
+
+          // 未开启 history 模式总是重置，开启时非preventSet时才重置
+          if (self.option.historyEnable && !preventSet) {
+            self._triggerResetEvent(preventSet);
+          } else if (!self.option.historyEnable) {
+            self._triggerResetEvent(preventSet);
+          }
+
+          self.option.onChange && self.option.onChange();
         }
       }
     });

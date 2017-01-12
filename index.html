@@ -5,64 +5,37 @@
         <meta charset="utf-8">
     </head>
     <body>
-        <div class="custom-filter">
-          <ul>
-            <li>
-              <a data-type="1" href="javascript:void(0)">互联网</a>
-
-              <ul>
-                <li>
-                  <a data-type="2" href="javascript:void(0)">前端</a>
-                </li>
-
-                <li>
-                  <a data-type="3" href="javascript:void(0)">后端</a>
-                </li>
-
-                <li>
-                  <a data-type="4" href="javascript:void(0)">APP开发</a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
 
         <div id="mysearh-wrap"></div>
         <div id="filter-wrap"></div>
         <div id="cdlist-demo"></div>
+        <div class="inputs-wrap">
+          <input id="enddate" placeholder="htmlend" name="enddate"/>
+        </div>
+        <div id="page-wrap"></div>
+
+        <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.js" charset="utf-8"></script>
+        <link href="//cdn.bootcss.com/flatpickr/2.2.8/flatpickr.css" rel="stylesheet">
+        <script src="//cdn.bootcss.com/flatpickr/2.2.8/flatpickr.js"></script>
+        <script src="//cdn.bootcss.com/flatpickr/2.2.8/l10n/zh.js"></script>
+        <script type="text/javascript" src="/lib/cdlist.js" charset="utf-8"></script>
+        <link href="/lib/cdlist.css" rel='stylesheet' type='text/css'/>
 
         <style>
-          .custom-filter a.active {
-            color: red;
-          }
-
-          .mod-page-item-active {
-            color: red;
-          }
-          .cdlist-sort-item-active {
-            color: red;
-          }
-
-          .cdlist-sort-item-active {
-            color: red;
-          }
-
-          .cdlist-sort-type-desc:after {
-            content: " down";
-            color: blue;
-          }
-
-          .cdlist-sort-type-asc:after {
-            content: " up";
-            color: blue;
+          #mysearh-wrap,
+          #filter-wrap,
+          #cdlist-demo,
+          #page-wrap {
+            margin-bottom: 10px;
           }
         </style>
-        <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.js" charset="utf-8"></script>
-        <script type="text/javascript" src="/lib/cdlist.js" charset="utf-8"></script>
-
         <script>
           var sort = window.sort = new CdList.addons.Sort({
             historyEnable: 1,
+
+            onChange: function () {
+              console.log('sort-change')
+            },
 
             datas: [
               {
@@ -88,24 +61,55 @@
             ]
           });
 
+          var datepicker = window.datepicker = new CdList.addons.DatePicker({
+            historyEnable: 1,
+            onChange: function () {
+              console.log('datepicker-change')
+            },
+            datas: [
+              {
+                label: '开始日期',
+                name: 'start_date',
+                val: '2016-05-18',
+                placeholder: 'startdate',
+                flatPickrConfig: {
+                  // mode: 'range',
+                  onChange: function () {
+                    // debugger;
+                  },
+
+                  onClose: function (selectedDates, dateStr, instance) {
+                    // debugger;
+                  }
+                }
+              },
+
+              {
+                label: '结束日期',
+                name: 'end_date',
+                placeholder: 'enddate'
+              }
+            ]
+          });
+
+          datepicker.on('flatinited', function (e, flatArr) {
+            console.log(flatArr);
+          });
+
           var search = window.search = new CdList.addons.Search({
             btnText: '点我吧！',
 
             placeholder: '需要输入1开头的数字',
 
-            val: '133',
-
-            regex: /^1\d+/,
-
             historyEnable: true,
 
             historyKey: 'mysearch',
 
-            container: '#mysearh-wrap'
-          });
+            container: '#mysearh-wrap',
 
-          search.on('error', function (e, value) {
-            alert(value + '你输入错了');
+            onChange: function () {
+              console.log('search-change')
+            }
           });
 
           var pg = window.pg = new CdList.addons.Pagination({
@@ -117,8 +121,13 @@
               textLabel: ['头', '上', '下', '尾']
             },
 
+            onChange: function () {
+              console.log('page-change')
+            },
+
             historyEnable: true,
 
+            container: '#page-wrap',
 
             getSetting: function (json) {
               return {
@@ -132,6 +141,10 @@
 
             line: 1,
 
+            onChange: function () {
+              console.log('filter-change');
+            },
+
             container: '#filter-wrap',
 
             filters: [
@@ -139,8 +152,6 @@
                 label: '用户属性',
 
                 name: 'usertype',
-
-                activeIndex: 1,
 
                 className: 'item-usertype',
 
@@ -150,6 +161,18 @@
                   { name: '不限', value: 0 },
                   { name: '僵尸用户', value: '1' },
                   { name: '活跃用户', value: '2' }
+                ]
+              },
+
+              {
+                label: '用户地域',
+
+                name: 'userarea',
+
+                datas: [
+                  { name: '不限', value: 0 },
+                  { name: '北京', value: '1' },
+                  { name: '上海', value: '2' }
                 ]
               }
             ]
@@ -181,7 +204,7 @@
               return json.list;
             },
 
-            addons: [search, sort, filter, pg]
+            addons: [ sort, filter, pg, search, datepicker]
           }, '#cdlist-demo');
 
           cdList.on('created', function () {
@@ -189,20 +212,6 @@
           });
 
           cdList.getList();
-
-          // 自身改变影响其他插件
-          $('.custom-filter').delegate('a', 'click', function () {
-            var type = $(this).data('type');
-
-            $('.custom-filter').find('.active').removeClass('active');
-
-            $(this).addClass('active');
-
-            cdList.setHistory('custom-type', type);
-            cdList.trigger('pagination.reset');
-            cdList.trigger('sort.reset');
-            cdList.trigger('reflow');
-          });
 
         </script>
     </body>

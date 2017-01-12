@@ -2,7 +2,7 @@ import template from '../template';
 import $ from 'jquery';
 
 var TPL_SORT = '<div class="cdlist-sort-container">' +
-  '<ul>' +
+  '<ul class="cdlist-sort-list">' +
     '<% for (var i = 0; i < datas.length; i++) { %>' +
       '<li class="cdlist-sort-item <% if (activeIndex == i) { %>cdlist-sort-item-active<% } %> ' +
         '<% if (activeIndex == i && datas[activeIndex].types) { %>' +
@@ -98,7 +98,7 @@ class Sort {
       this._resetItem(this.$activeItems);
       this.$activeItems = $item.addClass('cdlist-sort-item-active');
 
-      if (!preventHistory) {
+      if (!preventHistory && this.option.historyEnable) {
         this.root.setHistory(this.option.historyKey, key);
       }
     }
@@ -115,7 +115,7 @@ class Sort {
         // 加入现在的 type
         $item.addClass('cdlist-sort-type-' + type).data('sort-type', type);
 
-        if (!preventHistory) {
+        if (!preventHistory && this.option.historyEnable) {
           if (type && filterData.types && filterData.types.indexOf(type) > -1) {
             this.root.setHistory(this.option.historyTypeKey, type);
           } else {
@@ -124,11 +124,12 @@ class Sort {
         }
       }
     } else {
-      if (!preventHistory) {
+      if (!preventHistory && this.option.historyEnable) {
         this.root.removeHistory(this.option.historyTypeKey);
       }
     }
 
+    this.option.onChange && this.option.onChange();
 
     return this._triggerChange(preventHistory);
   }
