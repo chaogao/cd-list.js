@@ -186,5 +186,34 @@
   color: #dddddd;
   background-color: #fff;
 }
+/**
+ * 日历
+ */
+.cdlist-datepicker-container .cdlist-datepicker-item {
+  font-size: 0;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+.cdlist-datepicker-container .cdlist-datepicker-item:last-child {
+  margin-bottom: 0;
+}
+.cdlist-datepicker-container .cdlist-datepicker-item input {
+  border: 1px solid #eaeaea;
+  font-size: 14px;
+  line-height: 16px;
+  padding: 7px 5px;
+}
+.cdlist-datepicker-container .cdlist-datepicker-item input:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  outline: none;
+  border: 1px solid #b7b7b7;
+}
+.cdlist-datepicker-container .cdlist-datepicker-item .cdlist-datepicker-label {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 16px;
+  margin-right: 5px;
+}
 
 /*# sourceMappingURL=cdlist.css.map*/

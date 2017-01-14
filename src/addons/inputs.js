@@ -10,7 +10,8 @@ import EventMixin from '../tools/event.js';
 const TPL_INPUT = '<div class="cdlist-inputs-container"></div>';
 
 let _option = {
-  resetList: ['pagination', 'filter', 'sort']
+  resetList: ['pagination', 'filter', 'sort'],
+  allowEqual: false
 }
 
 let _addonName = 'inputs'
@@ -138,8 +139,13 @@ export default class Inputs extends mixin(EventMixin) {
         let historyKey = data.historyKey || data.name;
         let historyValue = this.root.getHistoryValue(historyKey);
 
+
         if (historyValue) {
-          data.val = historyValue;
+          if (data.regex && data.regex.test(historyValue)) {
+            data.val = historyValue;
+          } else if (!data.regex) {
+            data.val = historyValue;
+          }
         }
       }
     });
@@ -150,9 +156,9 @@ export default class Inputs extends mixin(EventMixin) {
       return;
     }
 
-    let oriValue = this.getAddonData();
+    let oriValue = Inputs.prototype.getAddonData.apply(this);
 
-    if (oriValue[name]  == val) {
+    if (oriValue[name]  == val && !this.option.allowEqual) {
       return;
     }
 

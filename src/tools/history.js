@@ -11,7 +11,7 @@ function normalizeBase (base) {
     base = '/' + base
   }
 
-  return base.replace(/\/$/, '')
+  return base;
 }
 
 export default class History {

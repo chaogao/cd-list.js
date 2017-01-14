@@ -70,7 +70,6 @@
               {
                 label: '开始日期',
                 name: 'start_date',
-                val: '2016-05-18',
                 placeholder: 'startdate',
                 flatPickrConfig: {
                   // mode: 'range',
@@ -106,6 +105,8 @@
             historyKey: 'mysearch',
 
             container: '#mysearh-wrap',
+
+            regex: /133.*/,
 
             onChange: function () {
               console.log('search-change')

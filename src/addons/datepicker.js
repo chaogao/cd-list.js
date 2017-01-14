@@ -1,5 +1,5 @@
 /**
- * 通用的 input 输入框
+ * datepicker 插件，extends Inputs
  */
 var template = require('../template');
 
@@ -96,12 +96,18 @@ export default class DatePicker extends Inputs {
         let userCallback = config.onClose;
 
         config.onClose = function (selectedDates, dateStr, instance) {
+          if (!dateStr) {
+            return;
+          }
           self.setValue(data.name, dateStr);
 
           userCallback.apply(this, Array.prototype.slice.apply(arguments));
         };
       } else {
         config.onClose = function (selectedDates, dateStr, instance) {
+          if (!dateStr) {
+            return;
+          }
           self.setValue(data.name, dateStr);
         };
       }
