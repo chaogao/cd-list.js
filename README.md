@@ -25,4 +25,4 @@ cdlist 提供了 web 端列表应用的解决方案，通过配置插件可以�
 
 
 ## License (MIT) && Creator
-gaochao04@gmail.com(mailto:gaochao04@gmail.com)
+[gaochao04@gmail.com](mailto:gaochao04@gmail.com)
